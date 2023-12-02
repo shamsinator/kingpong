@@ -1,8 +1,47 @@
-body {
-    font-family: Arial, Helvetica, sans-serif;
-}
+// body {
+//     font-family: Arial, Helvetica, sans-serif;
+// }
 .header {
     margin-top: 2rem;
     color: green;
     text-align: center;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+.container > div {
+    position: fixed;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+    filter: blur(20px);
+    transform: scale(0.5);
+}
+
+.container > div.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+    filter: blur(0);
+    transform: scale(1);
+}
+
+.container > #gameplay {
+    opacity: 1;
+    z-index: 0;
+    transform: scale(1);
+    filter: blur(0);
+}
+
+.container > div.active ~ #gameplay {
+    opacity: 0.75;
+    filter: blur(10px);
+    transform: scale(0.95);
 }

@@ -7,9 +7,26 @@
         <link rel="icon" type="image/x-icon" href="./img/favicon.svg" />
         <link rel="stylesheet" href="./scss/style.scss" />
         <script type="module" defer src="./js/main.js"></script>
-        <title>Vite Build</title>
+        <title>King Pong</title>
     </head>
     <body>
-        <h1 class="header">Vite Template Project</h1>
+        <div class="container">
+            <div id="startMenu">
+                <h1>Pong</h1>
+                <button id="startBtn">Start</button>
+            </div>
+            <div id="pauseMenu">
+                <h1>Pause</h1>
+                <button id="continueBtn">Continue</button>
+                <button id="restartBtn">Restart</button>
+            </div>
+            <div id="gameOverMenu">
+                <h1 id="gameMessage"></h1>
+                <button id="againBtn">Try again</button>
+            </div>
+            <div id="gameplay">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+        </div>
     </body>
 </html>

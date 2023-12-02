@@ -1,1 +1,34 @@
 // place global css variables here
+
+:root {
+    --black: #272727;
+    --red: #df3c3d;
+    --blue: #3589e6;
+    --yellow: gold;
+    --orange: orange;
+    --green: #9acf70;
+    --white: #faebd7;
+}
+
+html,
+body {
+    // box-sizing: border-box;
+    background: var(--black);
+    font-family: 'Press Start 2P';
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--black);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.07);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+// html,
+// body {
+//     width: 100%;
+//     height: 100%;
+//     margin: 0;
+//     background: black;
+//     font-family: 'Roboto', sans-serif;
+// }

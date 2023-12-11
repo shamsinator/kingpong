@@ -68,7 +68,7 @@ function initPaddles() {
 }
 
 function setupEventListeners() {
-    window.addEventListener('resize', windowResize);
+    window.addEventListener('resize', _.throttle(windowResize, 1000));
     startBtn.addEventListener('click', startGame);
     continueBtn.addEventListener('click', resumeGame);
     restartBtn.addEventListener('click', resetGame);

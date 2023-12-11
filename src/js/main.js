@@ -39,7 +39,7 @@ let gameInterval;
 const startMenu = document.getElementById('startMenu');
 const pauseMenu = document.getElementById('pauseMenu');
 const gameOverMenu = document.getElementById('gameOverMenu');
-const gameplay = document.getElementById('gameplay');
+const gameArea = document.getElementById('gameArea');
 const startBtn = document.getElementById('startBtn');
 const continueBtn = document.getElementById('continueBtn');
 const restartBtn = document.getElementById('restartBtn');
@@ -80,13 +80,13 @@ function setupEventListeners() {
 function showStartMenu() {
     startMenu.className = 'active';
     pauseMenu.className = '';
-    gameplay.className = '';
+    gameArea.className = '';
     gameOverMenu.className = '';
 }
 
 function startGame() {
     gameInProgress = true;
-    gameplay.className = '';
+    gameArea.className = '';
     startMenu.className = '';
     gameOverMenu.className = '';
     pauseMenu.className = '';
@@ -117,7 +117,7 @@ function togglePause() {
 function pauseGame() {
     if (!gamePaused) {
         gamePaused = true;
-        gameplay.className = '';
+        gameArea.className = '';
         pauseMenu.className = 'active';
         clearInterval(gameInterval);
     }
@@ -126,7 +126,7 @@ function pauseGame() {
 function resumeGame() {
     if (gamePaused) {
         gamePaused = false;
-        gameplay.className = '';
+        gameArea.className = '';
         pauseMenu.className = '';
         startGame();
     }
@@ -147,7 +147,7 @@ function windowResize() {
 }
 
 function showPauseMenuOnResize() {
-    gameplay.className = '';
+    gameArea.className = '';
     pauseMenu.className = 'active';
     gamePaused = true;
     startMenu.className = '';
@@ -396,7 +396,7 @@ function gameOver(playerWon) {
         againBtn.textContent = 'Try again';
     }
 
-    gameplay.className = '';
+    gameArea.className = '';
     startMenu.className = '';
     pauseMenu.className = '';
     gameOverMenu.className = 'active';

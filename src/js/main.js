@@ -133,10 +133,24 @@ function resumeGame() {
 }
 
 function windowResize() {
+    if (gameInProgress && !gamePaused) {
+        pauseGame();
+        showPauseMenuOnResize();
+    } else if (!gameInProgress) {
+        showStartMenu();
+    }
+
     resetBall();
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     drawEverything();
+}
+
+function showPauseMenuOnResize() {
+    gameplay.className = '';
+    pauseMenu.className = 'active';
+    gamePaused = true;
+    startMenu.className = '';
 }
 
 function keyDown(e) {
@@ -373,6 +387,7 @@ function gameOver(playerWon) {
     clearInterval(gameInterval);
     gameMessage.textContent = '';
     againBtn.textContent = '';
+
     if (playerWon) {
         gameMessage.textContent = 'You won!';
         againBtn.textContent = 'Play again';
@@ -380,6 +395,9 @@ function gameOver(playerWon) {
         gameMessage.textContent = 'Oh snap, you lost.';
         againBtn.textContent = 'Try again';
     }
+
     gameplay.className = '';
+    startMenu.className = '';
+    pauseMenu.className = '';
     gameOverMenu.className = 'active';
 }

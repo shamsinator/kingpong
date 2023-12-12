@@ -77,19 +77,26 @@ function setupEventListeners() {
     document.addEventListener('keyup', keyUp);
 }
 
+// NOTE: extract this function to a separate file
+function toggleActiveClass(element, isActive) {
+    isActive
+        ? element.classList.add('active')
+        : element.classList.remove('active');
+}
+
 function showStartMenu() {
-    startMenu.className = 'active';
-    pauseMenu.className = '';
-    gameArea.className = '';
-    gameOverMenu.className = '';
+    toggleActiveClass(startMenu, true);
+    toggleActiveClass(pauseMenu, false);
+    toggleActiveClass(gameArea, false);
+    toggleActiveClass(gameOverMenu, false);
 }
 
 function startGame() {
     gameInProgress = true;
-    gameArea.className = '';
-    startMenu.className = '';
-    gameOverMenu.className = '';
-    pauseMenu.className = '';
+    toggleActiveClass(startMenu, false);
+    toggleActiveClass(pauseMenu, false);
+    toggleActiveClass(gameArea, false);
+    toggleActiveClass(gameOverMenu, false);
     gamePaused = false;
     gameInterval = window.setInterval(function () {
         moveEverything();
@@ -117,8 +124,8 @@ function togglePause() {
 function pauseGame() {
     if (!gamePaused) {
         gamePaused = true;
-        gameArea.className = '';
-        pauseMenu.className = 'active';
+        toggleActiveClass(gameArea, false);
+        toggleActiveClass(pauseMenu, true);
         clearInterval(gameInterval);
     }
 }
@@ -126,8 +133,8 @@ function pauseGame() {
 function resumeGame() {
     if (gamePaused) {
         gamePaused = false;
-        gameArea.className = '';
-        pauseMenu.className = '';
+        toggleActiveClass(gameArea, false);
+        toggleActiveClass(pauseMenu, false);
         startGame();
     }
 }
@@ -147,10 +154,11 @@ function windowResize() {
 }
 
 function showPauseMenuOnResize() {
-    gameArea.className = '';
-    pauseMenu.className = 'active';
     gamePaused = true;
-    startMenu.className = '';
+    toggleActiveClass(startMenu, false);
+    toggleActiveClass(pauseMenu, true);
+    toggleActiveClass(gameArea, false);
+    toggleActiveClass(gameOverMenu, false);
 }
 
 function keyDown(e) {
@@ -396,8 +404,8 @@ function gameOver(playerWon) {
         againBtn.textContent = 'Try again';
     }
 
-    gameArea.className = '';
-    startMenu.className = '';
-    pauseMenu.className = '';
-    gameOverMenu.className = 'active';
+    toggleActiveClass(startMenu, false);
+    toggleActiveClass(pauseMenu, false);
+    toggleActiveClass(gameArea, false);
+    toggleActiveClass(gameOverMenu, true);
 }

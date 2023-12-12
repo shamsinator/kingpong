@@ -45,3 +45,32 @@
     filter: blur(10px);
     transform: scale(0.95);
 }
+
+.menu {
+    width: 1024px;
+    height: 768px;
+    position: relative;
+    border: 4px solid dimgray;
+    background: repeating-linear-gradient(
+        0deg,
+        black,
+        rgba(255, 255, 255, 0.06) 4px
+    );
+    border-radius: 17px;
+    box-shadow: inset 24px 24px 100px rgba(255, 255, 255, 0.12),
+        inset -24px -24px 100px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    &__title {
+        text-align: left;
+        padding: 32px;
+        background: repeating-linear-gradient(0deg, #254ad7, #6ac7ec 4px);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 1px 1px 24px rgba(255, 255, 255, 0.26);
+    }
+}

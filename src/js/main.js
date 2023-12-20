@@ -1,4 +1,5 @@
 import throttle from './utils/throttle';
+import toggleActiveClass from './utils/toggleActiveClass';
 
 const canvas = document.getElementById('gameCanvas');
 let canvasContext = canvas.getContext('2d');
@@ -77,13 +78,6 @@ function setupEventListeners() {
     againBtn.addEventListener('click', resetGame);
     document.addEventListener('keydown', keyDown);
     document.addEventListener('keyup', keyUp);
-}
-
-// NOTE: extract this function to a separate file
-function toggleActiveClass(element, isActive) {
-    isActive
-        ? element.classList.add('active')
-        : element.classList.remove('active');
 }
 
 function showStartMenu() {
@@ -344,7 +338,7 @@ function drawEverything() {
     );
     canvasContext.fill();
 
-    // draw paggle one
+    // draw paddle one
     canvasContext.fillStyle = PADDLE_COLOR;
     canvasContext.fillRect(paddleWidth, paddleOne.y, paddleWidth, paddleHeight);
 

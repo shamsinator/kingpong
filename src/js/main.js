@@ -1,3 +1,5 @@
+import throttle from './utils/throttle';
+
 const canvas = document.getElementById('gameCanvas');
 let canvasContext = canvas.getContext('2d');
 
@@ -68,7 +70,7 @@ function initPaddles() {
 }
 
 function setupEventListeners() {
-    window.addEventListener('resize', _.throttle(windowResize, 1000));
+    window.addEventListener('resize', throttle(windowResize, 1000));
     startBtn.addEventListener('click', startGame);
     continueBtn.addEventListener('click', resumeGame);
     restartBtn.addEventListener('click', resetGame);

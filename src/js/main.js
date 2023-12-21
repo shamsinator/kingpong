@@ -39,6 +39,11 @@ let scoreToWin = 10;
 let difficultyLevel = 1;
 let gameInterval;
 
+const gameBackgroundMusic = document.getElementById('backgroundMusic');
+const hitSound = document.getElementById('hitSound');
+const gameOverSound = document.getElementById('gameOverSound');
+const gameWonSound = document.getElementById('gameWonSound');
+
 const startMenu = document.getElementById('startMenu');
 const pauseMenu = document.getElementById('pauseMenu');
 const gameOverMenu = document.getElementById('gameOverMenu');
@@ -88,6 +93,7 @@ function showStartMenu() {
 }
 
 function startGame() {
+    toggleBackgroundMusic(true);
     gameInProgress = true;
     toggleActiveClass(startMenu, false);
     toggleActiveClass(pauseMenu, false);
@@ -119,6 +125,7 @@ function togglePause() {
 
 function pauseGame() {
     if (!gamePaused) {
+        toggleBackgroundMusic(false);
         gamePaused = true;
         toggleActiveClass(gameArea, false);
         toggleActiveClass(pauseMenu, true);
@@ -240,6 +247,7 @@ function handleBallCollision(paddle, collisionPointX) {
     ) {
         ball.velocityX = -ball.velocityX;
         handleBallVerticalBounce(paddle);
+        playHitSound();
     } else if (ball.positionX > canvas.width || ball.positionX < -ball.size) {
         resetBall();
         updateScores();
@@ -387,15 +395,18 @@ function randomizeGame() {
 }
 
 function gameOver(playerWon) {
+    toggleBackgroundMusic(false);
     gameInProgress = false;
     clearInterval(gameInterval);
     gameMessage.textContent = '';
     againBtn.textContent = '';
 
     if (playerWon) {
+        playGameWonByPlayer();
         gameMessage.textContent = 'You won!';
         againBtn.textContent = 'Play again';
     } else {
+        playGameOverSound();
         gameMessage.textContent = 'Oh snap, you lost.';
         againBtn.textContent = 'Try again';
     }
@@ -404,4 +415,41 @@ function gameOver(playerWon) {
     toggleActiveClass(pauseMenu, false);
     toggleActiveClass(gameArea, false);
     toggleActiveClass(gameOverMenu, true);
+}
+
+function toggleBackgroundMusic(playSound = true) {
+    if (!gameBackgroundMusic) {
+        console.error('gameBackgroundMusic is not defined');
+        return;
+    }
+
+    gameBackgroundMusic.loop = true;
+    playSound ? gameBackgroundMusic.play() : gameBackgroundMusic.pause();
+}
+
+function playHitSound() {
+    if (!hitSound) {
+        console.error('hitSound is not defined');
+        return;
+    }
+
+    hitSound.play();
+}
+
+function playGameOverSound() {
+    if (!gameOverSound) {
+        console.error('gameOverSound is not defined');
+        return;
+    }
+
+    gameOverSound.play();
+}
+
+function playGameWonByPlayer() {
+    if (!gameWonSound) {
+        console.error('gameWonSound is not defined');
+        return;
+    }
+
+    gameWonSound.play();
 }

@@ -10,25 +10,84 @@
         <title>King Pong</title>
     </head>
     <body>
+        <!-- Game Sounds -->
         <audio id="backgroundMusic" src="sounds/game-music.mp3"></audio>
         <audio id="hitSound" src="sounds/hit.mp3"></audio>
         <audio id="gameOverSound" src="sounds/game-over.mp3"></audio>
         <audio id="gameWonSound" src="sounds/game-won.mp3"></audio>
 
         <div class="container">
+            <!-- Start -->
             <div id="startMenu" class="menu">
-                <h1 class="menu__title">King Pong</h1>
-                <button id="startBtn">Start</button>
+                <header><h1 class="menu__title">King Pong</h1></header>
+                <button id="startBtn" class="button button-primary flash">
+                    Start the Game
+                </button>
+
+                <div id="game-instructions" class="default-text">
+                    <section class="section">
+                        <header class="section__header">
+                            <h2>🏓 Game Instructions 🏓</h2>
+                        </header>
+                        <p>
+                            Use the UP and DOWN arrow keys to control your
+                            paddle.
+                        </p>
+                        <p>
+                            Try to bounce the ball past your opponent's paddle
+                            to score points.
+                        </p>
+                        <p>The first player to reach the score limit wins!</p>
+                    </section>
+                    <hr />
+                    <section class="section">
+                        <header class="section__header">
+                            <h2>🎮 Controls 🎮</h2>
+                        </header>
+                        <p>Press SPACEBAR to start the game.</p>
+                        <p>
+                            During the game, press ESC or ENTER to pause and
+                            access settings.
+                        </p>
+                    </section>
+                </div>
             </div>
-            <div id="pauseMenu" class="menu">
+            <!-- Pause -->
+            <div id="pauseMenu" class="menu default-text">
                 <h2 class="menu__title">Pause</h2>
-                <button id="continueBtn">Continue</button>
-                <button id="restartBtn">Restart</button>
+                <button id="continueBtn" class="button button-secondary">
+                    Continue
+                </button>
+                <button id="restartBtn" class="button">Restart</button>
+                <hr />
+                <section class="section">
+                    <header class="section__header">
+                        <h2>Did you know?</h2>
+                    </header>
+                    <p>
+                        The Pope once played a game of Pong against a
+                        computerized opponent and won!
+                    </p>
+                </section>
             </div>
-            <div id="gameOverMenu" class="menu">
+            <!-- Game Over -->
+            <div id="gameOverMenu" class="menu default-text">
                 <h2 id="gameMessage" class="menu__title"></h2>
-                <button id="againBtn">Try again</button>
+                <button id="againBtn" class="button button-tertiary">
+                    Try again
+                </button>
+                <hr />
+                <section class="section">
+                    <header class="section__header">
+                        <h2>Game Over</h2>
+                    </header>
+                    <p>
+                        Thanks for playing King Pong! Your skills are unmatched.
+                        Want to play again?
+                    </p>
+                </section>
             </div>
+            <!-- Actual Game area -->
             <div id="gameArea">
                 <canvas id="gameCanvas" width="800" height="600"></canvas>
             </div>

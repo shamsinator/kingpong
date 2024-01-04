@@ -407,7 +407,7 @@ function gameOver(playerWon) {
         againBtn.textContent = 'Play again';
     } else {
         playGameOverSound();
-        gameMessage.textContent = 'Oh snap, you lost.';
+        gameMessage.textContent = 'Game Over :(';
         againBtn.textContent = 'Try again';
     }
 

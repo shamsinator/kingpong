@@ -1,0 +1,11 @@
+// Keyframes
+@keyframes flash {
+    0% {
+        background-color: var(--white);
+        color: #aa0114;
+    }
+    50% {
+        background-color: initial;
+        color: var(--white);
+    }
+}

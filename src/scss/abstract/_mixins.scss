@@ -1,6 +1,26 @@
-//setup mixins for your project
-//example below can delete.
-
 @mixin sectionPadding {
     padding: 60px 0;
+}
+
+@mixin button-style($background, $hover-background) {
+    background: $background;
+    border-bottom: 6px inset rgba(0, 0, 0, 0.5);
+    border-left: 6px inset rgba(0, 0, 0, 0.5);
+    border-right: 6px inset rgba(255, 255, 255, 0.5);
+    border-top: 6px inset rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    color: var(--white);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 2.2rem;
+    margin: 1rem;
+    min-width: 200px;
+    padding: 0.5rem;
+    text-transform: uppercase;
+    width: auto;
+
+    &:focus,
+    &:hover {
+        background: $hover-background;
+    }
 }

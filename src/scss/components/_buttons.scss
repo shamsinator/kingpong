@@ -1,0 +1,23 @@
+@import '../abstract/mixins';
+
+.button {
+    @include button-style(#7c7c7c, #bcbcbc);
+}
+
+.button {
+    &.button-primary {
+        @include button-style(#881400, #a81000);
+    }
+}
+
+.button {
+    &.button-secondary {
+        @include button-style(#005800, #006800);
+    }
+}
+
+.button {
+    &.button-tertiary {
+        @include button-style(#0000bc, #0000fc);
+    }
+}

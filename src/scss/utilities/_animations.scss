@@ -1,0 +1,10 @@
+// Import keyframes
+@import './keyframes';
+
+// Your animations
+.flash {
+    animation-name: flash;
+    animation-duration: 1s;
+    animation-timing-function: step-end;
+    animation-iteration-count: infinite;
+}

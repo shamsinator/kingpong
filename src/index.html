@@ -20,10 +20,38 @@
             <!-- Start -->
             <div id="startMenu" class="menu">
                 <header><h1 class="menu__title">King Pong</h1></header>
-                <button id="startBtn" class="button button-primary flash">
+                <button
+                    id="startBtn"
+                    class="button button-primary flash"
+                    style="display: none"
+                >
                     Start the Game
                 </button>
-
+                <div id="game-difficulty">
+                    <section class="section">
+                        <header class="section__header">
+                            <h2>Choose difficulty</h2>
+                        </header>
+                        <button
+                            id="normal"
+                            class="button button-secondary difficulty-button"
+                        >
+                            Normal
+                        </button>
+                        <button
+                            id="hard"
+                            class="button button-secondary difficulty-button"
+                        >
+                            Hard
+                        </button>
+                        <button
+                            id="extreme"
+                            class="button button-secondary difficulty-button"
+                        >
+                            Extreme
+                        </button>
+                    </section>
+                </div>
                 <div id="game-instructions" class="default-text">
                     <section class="section">
                         <header class="section__header">

@@ -1,5 +1,6 @@
 import throttle from './utils/throttle';
 import toggleActiveClass from './utils/toggleActiveClass';
+import getRandomNumber from './utils/getRandomNumber';
 
 const canvas = document.getElementById('gameCanvas');
 let canvasContext = canvas.getContext('2d');
@@ -39,6 +40,24 @@ let scoreToWin = 10;
 let difficultyLevel = 1;
 let gameInterval;
 
+// Set initial difficulty level
+let currentDifficulty = 'normal';
+
+const difficultyLevels = {
+    normal: {
+        ballVelocity: 2,
+        initialBallPositionY: canvas.height / 2 - ball.size / 2,
+    },
+    hard: {
+        ballVelocity: 4,
+        initialBallPositionY: canvas.height / 3 - ball.size / 2,
+    },
+    extreme: {
+        ballVelocity: 6,
+        initialBallPositionY: canvas.height / 4 - ball.size / 2,
+    },
+};
+
 const gameBackgroundMusic = document.getElementById('backgroundMusic');
 const hitSound = document.getElementById('hitSound');
 const gameOverSound = document.getElementById('gameOverSound');
@@ -66,8 +85,8 @@ function initCanvas() {
 }
 
 function initBall() {
-    ball.positionY = canvas.height / 2 - ball.size / 2;
-    ball.velocityY = getRandomNumber(-5, 5) * (0.25 * difficultyLevel);
+    ball.velocityY = difficultyLevels[currentDifficulty].ballVelocity;
+    ball.positionY = difficultyLevels[currentDifficulty].initialBallPositionY;
 }
 
 function initPaddles() {
@@ -83,6 +102,34 @@ function setupEventListeners() {
     againBtn.addEventListener('click', resetGame);
     document.addEventListener('keydown', keyDown);
     document.addEventListener('keyup', keyUp);
+
+    setupDifficultyButtons();
+}
+
+function setupDifficultyButtons() {
+    const difficultyButtons = document.querySelectorAll('.difficulty-button');
+    difficultyButtons.forEach((button) => {
+        button.addEventListener('click', () => setDifficulty(button.id));
+    });
+}
+
+function setDifficulty(newDifficulty, callback) {
+    if (difficultyLevels[newDifficulty]) {
+        currentDifficulty = newDifficulty;
+        initBall();
+        showStartButton();
+
+        if (callback && typeof callback === 'function') {
+            callback(currentDifficulty);
+        }
+    }
+}
+
+function showStartButton() {
+    const startButton = document.getElementById('startBtn');
+    if (startButton) {
+        startButton.style.display = 'block';
+    }
 }
 
 function showStartMenu() {
@@ -153,7 +200,14 @@ function windowResize() {
     resetBall();
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    clearInterval(gameInterval);
+
     drawEverything();
+
+    if (gameInProgress && !gamePaused) {
+        startGame(); // Restart the interval if the game is in progress and not paused
+    }
 }
 
 function showPauseMenuOnResize() {
@@ -185,7 +239,7 @@ function keyUp(e) {
 
 function resetBall() {
     ball.velocityX = -ball.velocityX;
-    ball.velocityY = getRandomNumber(-5, 5) * (0.25 * difficultyLevel);
+    ball.velocityY = difficultyLevels[currentDifficulty].ballVelocity;
     ball.positionX = canvas.width / 2;
     ball.positionY = canvas.height / 2;
 }
@@ -265,9 +319,7 @@ function handleBallVerticalBounce(paddle) {
 
         if (ball.positionY >= segmentStartY && ball.positionY < segmentEndY) {
             ball.velocityY =
-                (i - Math.floor(bounceSegments / 2)) *
-                5 *
-                (0.25 * difficultyLevel);
+                (i - Math.floor(bounceSegments / 2)) * 5 * difficultyLevel;
             break;
         }
     }
@@ -282,11 +334,12 @@ function ballHitsPaddleOne() {
 }
 
 function ballHitsPaddleTwo() {
-    return (
-        ball.positionX > canvas.width - paddleWidth * 2 - ball.size / 2 &&
-        ball.positionY >= paddleTwo.y &&
-        ball.positionY <= paddleTwo.y + paddleHeight
-    );
+    const isBallRightOfPaddle =
+        ball.positionX > canvas.width - paddleWidth * 2 - ball.size / 2;
+    const isBallAbovePaddle = ball.positionY >= paddleTwo.y;
+    const isBallBelowPaddle = ball.positionY <= paddleTwo.y + paddleHeight;
+
+    return isBallRightOfPaddle && isBallAbovePaddle && isBallBelowPaddle;
 }
 
 function updateScores() {
@@ -386,12 +439,8 @@ function drawEverything() {
     canvasContext.stroke();
 }
 
-function getRandomNumber(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
 function randomizeGame() {
-    paddleTwo.velocityY = getRandomNumber(10, 20) * (0.25 * difficultyLevel);
+    paddleTwo.velocityY = getRandomNumber(10, 20) * difficultyLevel;
 }
 
 function gameOver(playerWon) {

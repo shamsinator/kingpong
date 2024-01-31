@@ -468,7 +468,7 @@ function gameOver(playerWon) {
 
 function toggleBackgroundMusic(playSound = true) {
     if (!gameBackgroundMusic) {
-        console.error('gameBackgroundMusic is not defined');
+        console.warn('gameBackgroundMusic is not defined');
         return;
     }
 
@@ -478,7 +478,7 @@ function toggleBackgroundMusic(playSound = true) {
 
 function playHitSound() {
     if (!hitSound) {
-        console.error('hitSound is not defined');
+        console.warn('hitSound is not defined');
         return;
     }
 
@@ -487,7 +487,7 @@ function playHitSound() {
 
 function playGameOverSound() {
     if (!gameOverSound) {
-        console.error('gameOverSound is not defined');
+        console.warn('gameOverSound is not defined');
         return;
     }
 
@@ -496,7 +496,7 @@ function playGameOverSound() {
 
 function playGameWonByPlayer() {
     if (!gameWonSound) {
-        console.error('gameWonSound is not defined');
+        console.warn('gameWonSound is not defined');
         return;
     }
 

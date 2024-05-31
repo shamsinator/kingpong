@@ -1,3 +1,5 @@
+import { getGameState, setGameState } from './gameState';
+
 /**
  * Imports the `toggleActiveClass` utility function for toggling CSS classes on elements.
  */
@@ -43,14 +45,15 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // state variables
-    let gamePaused = false;
-    let gameInProgress = false;
     let scoreToWin = 10;
     let difficultyLevel = 1;
     let gameInterval;
 
     // Set initial difficulty level
-    let currentDifficulty = 'normal';
+    setGameState({ difficulty: 'normal' });
+
+    // Get the current difficulty from the updated game state
+    let currentDifficulty = getGameState().difficulty;
 
     let lastTime;
 
@@ -204,7 +207,8 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param {DOMHighResTimeStamp} timestamp - The timestamp provided by requestAnimationFrame.
      */
     function gameLoop(timestamp) {
-        if (!gameInProgress) {
+        const gameState = getGameState();
+        if (!gameState.gameInProgress) {
             return; // Stop the loop if the game is not in progress
         }
 
@@ -222,13 +226,16 @@ document.addEventListener('DOMContentLoaded', function () {
      * Starts or resumes the game loop, updates game state, and manages game rendering and logic.
      */
     function startGame() {
+        setGameState({
+            gameInProgress: true,
+            gamePaused: false,
+        });
+
         toggleBackgroundMusic(true);
-        gameInProgress = true;
         toggleActiveClass(startMenu, false);
         toggleActiveClass(pauseMenu, false);
         toggleActiveClass(gameArea, false);
         toggleActiveClass(gameOverMenu, false);
-        gamePaused = false;
         requestAnimationFrame(gameLoop);
     }
 
@@ -252,9 +259,12 @@ document.addEventListener('DOMContentLoaded', function () {
      * Toggles the game's pause state, either pausing or resuming the game based on its current state.
      */
     function togglePause() {
-        if (gamePaused) {
+        const gameState = getGameState();
+        if (gameState.gamePaused) {
+            // If the game is paused, resume it
             resumeGame();
         } else {
+            // If the game is not paused, pause it
             pauseGame();
         }
     }
@@ -263,10 +273,14 @@ document.addEventListener('DOMContentLoaded', function () {
      * Pauses the game, stopping game logic updates and showing the pause menu.
      */
     function pauseGame() {
-        if (gameInProgress) {
-            gameInProgress = false;
+        const gameState = getGameState();
+        if (gameState.gameInProgress) {
+            setGameState({
+                gameInProgress: false,
+                gamePaused: true,
+            });
+
             toggleBackgroundMusic(false);
-            gamePaused = true;
             toggleActiveClass(gameArea, false);
             toggleActiveClass(pauseMenu, true);
         }
@@ -276,9 +290,13 @@ document.addEventListener('DOMContentLoaded', function () {
      * Resumes the game from a paused state, hiding the pause menu and continuing game logic updates.
      */
     function resumeGame() {
-        if (!gameInProgress && gamePaused) {
-            gameInProgress = true; // Allow the game loop to continue
-            gamePaused = false;
+        const gameState = getGameState();
+        if (!gameState.gameInProgress && gameState.gamePaused) {
+            setGameState({
+                gameInProgress: true,
+                gamePaused: false,
+            });
+
             toggleActiveClass(gameArea, true);
             toggleActiveClass(pauseMenu, false);
             toggleBackgroundMusic(true);
@@ -290,10 +308,13 @@ document.addEventListener('DOMContentLoaded', function () {
      * Handles window resize events to pause the game and adjust game elements as needed.
      */
     function windowResize() {
-        if (gameInProgress && !gamePaused) {
+        const gameState = getGameState();
+        if (gameState.gameInProgress && !gameState.gamePaused) {
+            // If the game is in progress and not paused, pause it and show pause menu on resize
             pauseGame();
             showPauseMenuOnResize();
-        } else if (!gameInProgress) {
+        } else if (!gameState.gameInProgress) {
+            // If the game is not in progress, show the start menu
             showStartMenu();
         }
 
@@ -305,8 +326,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         drawEverything();
 
-        // Restart the interval if the game is in progress and not paused
-        if (gameInProgress && !gamePaused) {
+        // Restart the game if it was in progress and not paused
+        if (gameState.gameInProgress && !gameState.gamePaused) {
             startGame();
         }
     }
@@ -315,7 +336,9 @@ document.addEventListener('DOMContentLoaded', function () {
      * Shows the pause menu when the window is resized, pausing the game and awaiting further user action.
      */
     function showPauseMenuOnResize() {
-        gamePaused = true;
+        setGameState({
+            gamePaused: true,
+        });
         toggleActiveClass(startMenu, false);
         toggleActiveClass(pauseMenu, true);
         toggleActiveClass(gameArea, false);
@@ -329,15 +352,17 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function keyDown(e) {
         e.preventDefault();
-        switch (e.keyCode) {
-            case 13:
-                if (gameInProgress) togglePause();
+        const gameState = getGameState();
+
+        switch (e.key) {
+            case 'Enter':
+                if (gameState.gameInProgress) togglePause();
                 break;
-            case 38:
-                if (!gamePaused) paddleOne.directionY = 'up';
+            case 'ArrowUp':
+                if (!gameState.gamePaused) paddleOne.directionY = 'up';
                 break;
-            case 40:
-                if (!gamePaused) paddleOne.directionY = 'down';
+            case 'ArrowDown':
+                if (!gameState.gamePaused) paddleOne.directionY = 'down';
                 break;
         }
     }
@@ -539,8 +564,9 @@ document.addEventListener('DOMContentLoaded', function () {
      * Checks if the game should end, either by a player winning or the ball exiting the game area.
      */
     function checkGameEnd() {
+        const gameState = getGameState();
         if (
-            gameInProgress &&
+            !gameState.gameInProgress &&
             (ball.positionX > canvas.width || ball.positionX < -ball.size)
         ) {
             gameOver(ballHitsPaddleTwo());
@@ -630,7 +656,10 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param {boolean} playerWon - Indicates whether the player won the game or not.
      */
     function gameOver(playerWon) {
-        gameInProgress = false;
+        setGameState({
+            gameInProgress: false,
+        });
+
         toggleBackgroundMusic(false);
         gameMessage.textContent = playerWon ? 'You won!' : 'Game Over :(';
         againBtn.textContent = playerWon ? 'Play again' : 'Try again';

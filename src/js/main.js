@@ -1,4 +1,5 @@
 import { getGameState, setGameState } from './gameState';
+import { gameStateMachine, GameStates, GameEvents } from './gameStateMachine';
 
 /**
  * Imports the `toggleActiveClass` utility function for toggling CSS classes on elements.
@@ -194,6 +195,10 @@ document.addEventListener('DOMContentLoaded', function () {
      * Toggles the display of the start menu, allowing players to navigate the game's initial options.
      */
     function showStartMenu() {
+        gameStateMachine.transition(GameEvents.RESET);
+        setGameState({
+            currentState: GameStates.MENU,
+        });
         toggleActiveClass(startMenu, true);
         toggleActiveClass(pauseMenu, false);
         toggleActiveClass(gameArea, false);
@@ -208,8 +213,8 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function gameLoop(timestamp) {
         const gameState = getGameState();
-        if (!gameState.gameInProgress) {
-            return; // Stop the loop if the game is not in progress
+        if (gameState.currentState !== GameStates.PLAYING) {
+            return; // Stop the loop if not in PLAYING state
         }
 
         if (!lastTime) lastTime = timestamp;
@@ -226,17 +231,21 @@ document.addEventListener('DOMContentLoaded', function () {
      * Starts or resumes the game loop, updates game state, and manages game rendering and logic.
      */
     function startGame() {
-        setGameState({
-            gameInProgress: true,
-            gamePaused: false,
-        });
+        if (gameStateMachine.canTransition(GameEvents.START)) {
+            gameStateMachine.transition(GameEvents.START);
+            setGameState({
+                gameInProgress: true,
+                gamePaused: false,
+                currentState: GameStates.PLAYING,
+            });
 
-        toggleBackgroundMusic(true);
-        toggleActiveClass(startMenu, false);
-        toggleActiveClass(pauseMenu, false);
-        toggleActiveClass(gameArea, false);
-        toggleActiveClass(gameOverMenu, false);
-        requestAnimationFrame(gameLoop);
+            toggleBackgroundMusic(true);
+            toggleActiveClass(startMenu, false);
+            toggleActiveClass(pauseMenu, false);
+            toggleActiveClass(gameArea, false);
+            toggleActiveClass(gameOverMenu, false);
+            requestAnimationFrame(gameLoop);
+        }
     }
 
     /**
@@ -273,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function () {
      * Pauses the game, stopping game logic updates and showing the pause menu.
      */
     function pauseGame() {
-        const gameState = getGameState();
-        if (gameState.gameInProgress) {
+        if (gameStateMachine.canTransition(GameEvents.PAUSE)) {
+            gameStateMachine.transition(GameEvents.PAUSE);
             setGameState({
                 gameInProgress: false,
                 gamePaused: true,
@@ -290,8 +299,8 @@ document.addEventListener('DOMContentLoaded', function () {
      * Resumes the game from a paused state, hiding the pause menu and continuing game logic updates.
      */
     function resumeGame() {
-        const gameState = getGameState();
-        if (!gameState.gameInProgress && gameState.gamePaused) {
+        if (gameStateMachine.canTransition(GameEvents.RESUME)) {
+            gameStateMachine.transition(GameEvents.RESUME);
             setGameState({
                 gameInProgress: true,
                 gamePaused: false,
@@ -300,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleActiveClass(gameArea, true);
             toggleActiveClass(pauseMenu, false);
             toggleBackgroundMusic(true);
-            requestAnimationFrame(gameLoop); // Resume the game loop
+            requestAnimationFrame(gameLoop);
         }
     }
 
@@ -356,13 +365,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         switch (e.key) {
             case 'Enter':
-                if (gameState.gameInProgress) togglePause();
+                if (gameState.currentState === GameStates.PLAYING)
+                    togglePause();
                 break;
             case 'ArrowUp':
-                if (!gameState.gamePaused) paddleOne.directionY = 'up';
+                if (gameState.currentState === GameStates.PLAYING)
+                    paddleOne.directionY = 'up';
                 break;
             case 'ArrowDown':
-                if (!gameState.gamePaused) paddleOne.directionY = 'down';
+                if (gameState.currentState === GameStates.PLAYING)
+                    paddleOne.directionY = 'down';
                 break;
         }
     }
@@ -656,6 +668,9 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param {boolean} playerWon - Indicates whether the player won the game or not.
      */
     function gameOver(playerWon) {
+        gameStateMachine.transition(
+            playerWon ? GameEvents.WIN : GameEvents.LOSE
+        );
         setGameState({
             gameInProgress: false,
         });

@@ -252,16 +252,40 @@ document.addEventListener('DOMContentLoaded', function () {
      * Resets the game to its initial state, including resetting scores and ball position.
      */
     function resetGame() {
+        // Reset game variables
         playerOneScore = 0;
         playerTwoScore = 0;
         difficultyLevel = 1;
+
+        // Reset game state machine
+        gameStateMachine.transition(GameEvents.RESET);
+        gameStateMachine.transition(GameEvents.START);
+
+        // Reset game elements
         initBall(
             canvas,
             createDifficultyLevels(canvas, { size: 20 }),
             currentDifficulty
         );
         initPaddles(canvas);
-        startGame();
+
+        // Update game state
+        setGameState({
+            gameInProgress: true,
+            gamePaused: false,
+            currentState: GameStates.PLAYING,
+        });
+
+        // Reset UI elements
+        toggleBackgroundMusic(true);
+        toggleActiveClass(startMenu, false);
+        toggleActiveClass(pauseMenu, false);
+        toggleActiveClass(gameArea, true);
+        toggleActiveClass(gameOverMenu, false);
+
+        // Start new game loop
+        lastTime = null;
+        requestAnimationFrame(gameLoop);
     }
 
     /**

@@ -392,6 +392,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (gameState.currentState === GameStates.PLAYING)
                     togglePause();
                 break;
+            case 'Escape':
+                if (gameState.currentState === GameStates.PLAYING)
+                    togglePause();
+                break;
             case 'ArrowUp':
                 if (gameState.currentState === GameStates.PLAYING)
                     paddleOne.directionY = 'up';
